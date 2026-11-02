@@ -110,8 +110,11 @@ deletions are outside this part's scope.
 6. Send an unsigned POST to either webhook URL and confirm 400 with no insert.
    Send a signed-out POST to `/api/user/sync` and confirm 401.
 
-Real sign-in and database persistence require actual Clerk and Neon credentials;
-placeholder keys used in build checks cannot authenticate a person.
+Local sign-in and database persistence require actual Clerk and Neon credentials.
+The deployed instance has its keys configured. Clerk's standard `user.created`
+test delivery was verified end to end: HTTP 200 and a new Prisma `User` record.
+The synthetic verification record was removed afterward. A person's interactive
+sign-in still requires them to complete Clerk's sign-up/sign-in flow.
 
 ## Dashboard and task management
 
@@ -200,6 +203,12 @@ The supplied Clerk instance uses development/test keys, suitable for assessment
 demonstrations. Use a production Clerk instance and production keys for a real
 agency launch.
 
+Production was deployed using the authenticated Vercel CLI. Automatic GitHub
+deployment is not linked because the Vercel Git integration does not currently
+have access to this repository. Until that integration is granted access, publish
+updates using `npx vercel --prod` from the linked project after pushing `main`.
+The public repository and production application are independently available.
+
 ### Reproduce the Vercel deployment
 
 1. Clone the public repository and use its `main` branch. Configure `.env` locally
@@ -230,6 +239,18 @@ marking. Changing a Vercel environment variable requires a redeploy to take effe
 - Initial SQL migration generated with Prisma Migrate's schema diff command.
 - Seed JavaScript syntax check passed.
 - All three migrations were applied successfully to Neon; schema status is current.
+- The Neon seed completed: two projects, ten tasks and their memberships.
+- Real Neon task-service checks passed for creation, persisted status changes,
+  denied outsider writes and preserving the selected due date. The temporary
+  verification task was removed afterward.
+- Production checks on 2026-11-02: home/sign-in/sign-up return 200 without Vercel
+  authentication; signed-out dashboard navigation redirects to Clerk; sync
+  returns 401 signed out; unsigned webhook requests return 400. The browser
+  renders Clerk's actual sign-up form.
+- Clerk's registered `user.created` test delivery returned HTTP 200 and created
+  its local `User` record in Neon. The synthetic record was removed after checking.
+- The GitHub repository is public, with `main` as its default branch; only the
+  sanitized branch was pushed. Both deliverable URLs are recorded at the top.
 - Authentication tests cover valid and invalid signatures, stale deliveries,
   primary-email mapping, accounts without email, concurrent user creation and
   database error propagation.
