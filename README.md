@@ -1,7 +1,7 @@
 # Project Management Dashboard - Parts (a), (b), (c) and (d)
 
 - Live application: https://agency-projects-dashboard.vercel.app
-- Public GitHub repository: https://github.com/developer26081992/agency-projects-dashboard
+- Public GitHub repository: https://github.com/developer26081992/project_tracking
 - Clerk webhook: `https://agency-projects-dashboard.vercel.app/api/webhooks/clerk`
 
 Next.js 13 App Router, React, Tailwind, Prisma, Neon PostgreSQL and Clerk
